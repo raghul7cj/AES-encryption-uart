@@ -41,7 +41,7 @@ The IP core is mapped to the Zynq memory space via AXI4-Lite.
 <img width="1531" height="445" alt="image" src="https://github.com/user-attachments/assets/95e40fca-dff6-463d-ab2f-d5875cefb53d" />
 
 # Block Diagram of AES architecture
-
+```text
 +-----------------------------------------------------------------------------------+
 |                      AXI4-STREAM AES ENCRYPTOR WRAPPER                            |
 |                                                                                   |
