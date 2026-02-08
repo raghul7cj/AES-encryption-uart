@@ -40,3 +40,53 @@ The IP core is mapped to the Zynq memory space via AXI4-Lite.
 <img width="1527" height="418" alt="image" src="https://github.com/user-attachments/assets/51ccaad2-d513-4e2b-b76b-002f4da2bf3f" />
 <img width="1531" height="445" alt="image" src="https://github.com/user-attachments/assets/95e40fca-dff6-463d-ab2f-d5875cefb53d" />
 
+# Block Diagram of AES architecture
+
++-----------------------------------------------------------------------------------+
+|                      AXI4-STREAM AES ENCRYPTOR WRAPPER                            |
+|                                                                                   |
+|  [AXI-Lite Control Regs (MODE, KEY, TRIG)]                                        |
+|                                                                                   |
+|   S_AXIS  +------------+                                            +-----------+  |
+| (Plain) ->|logic gating|                                            | Output    |-> M_AXIS
+| (Valid) ->| for stalls |   (128-bit Plaintext)                      | Gating /  |-> (Cipher)
+| (Ready) <-| Handshake  |-----------+                    +-----------| TLAST GEN |-> (Valid)
+|           +------------+           |                    |           +-----------+<- (Ready)
+|                                   V                    V                          |
+|       +===================================================================+       |
+|       |                    FULLY PIPELINED AES-128 CORE                   |       |
+|       |                                                                   |       |
+|       |  [Key Expansion Unit (Pipelined)] -> Feeds Keys down to Rounds    |       |
+|       |                                                                   |       |
+|       | (Start)                                                           |       |
+|       |    |                                                              |       |
+|       | [XOR Round Key 0]                                                 |       |
+|       |    |                                                              |       |
+|       | ====[ PIPE REG 0 ]=============================================== |       |
+|       |    |                                                              |       |
+|       |    +-->[ Read Addr ]-->[ S-BOX BRAMs (Sync) ]-->[ Read Data ]--+  | <--- BRAM acts as
+|       |                        (Clocked Stage)                         |  |      Pipeline Stage
+|       | ====[ PIPE REG 1 (BRAM Output) ]===============================+  |      Here
+|       |    |                                                              |       |
+|       | [ShiftRows] -> [MixColumns] -> [XOR Round Key 1]                  |       |
+|       |    |                                                              |       |
+|       | ====[ PIPE REG 2 ]=============================================== |       |
+|       |    |                                                              |       |
+|       |    .                                                              |       |
+|       |    . (Repeats for Rounds 2-9, alternating BRAM Reg & Logic Reg)   |       |
+|       |    .                                                              |       |
+|       |    |                                                              |       |
+|       | ====[ PIPE REG 18 ]============================================== |       |
+|       |    |                                                              |       |
+|       |    +-->[ Read Addr ]-->[ S-BOX BRAMs (Sync) ]-->[ Read Data ]--+  | <--- Final Round BRAM
+|       |                        (Clocked Stage)                         |  |
+|       | ====[ PIPE REG 19 (BRAM Output) ]==============================+  |       |
+|       |    |                                                              |       |
+|       | [ShiftRows] -> (No MixCols) -> [XOR Round Key 10]                 |       |
+|       |    |                                                              |       |
+|       | ====[ FINAL PIPE REG 20 ]======================================== |       |
+|       |    |                                                              |       |
+|       +===================================================================+       |
+|           | (128-bit Ciphertext)                                                  |
+|           +-----------------------------------------------------------------------+
++-----------------------------------------------------------------------------------+
