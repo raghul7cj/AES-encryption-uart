@@ -1,28 +1,42 @@
-UART-Based AES Encryption/Decryption System
+# AXI-Stream AES-128 Hardware Accelerator IP
+**Target Board:** PYNQ-Z2 (Zynq-7020)
+**Program:** Tesla VLSI Society and Research Project
 
-1. Overview
+---
 
-This project implements an AES (Advanced Encryption Standard) cryptographic core interfaced with a UART module to enable secure data transmission over a serial communication channel.
-Plaintext is sent via UART, encrypted using AES, and the ciphertext is transmitted back. The system also supports AES decryption for received encrypted data.
+## 📌 Project Overview
+This repository contains a high-performance **AES-128 Encryption Engine** implemented in Verilog. The design is optimized for the **PYNQ-Z2**, allowing the Zynq Processing System (ARM CPU) to offload cryptographic workloads to the Programmable Logic (FPGA) fabric.
 
-Target use case:
+It utilizes the **AXI4-Stream** protocol for high-bandwidth data transfers and an **AXI4-Lite** interface for control signaling and key management.
 
-  i. Secure serial communication
+---
 
-  ii. Cryptography + digital design integration
+## ⚙️ Technical Specifications
+* **Algorithm:** AES-128 (FIPS 197 Standard).
+* **Interfaces:** AXI4-Lite (Control/Status), AXI4-Stream (Data I/O).
+* **Data Width:** 128-bit (AXI-Stream), 32-bit (AXI-Lite).
+* **Handshaking:** Fully synchronous with gated `TVALID` to ensure pipeline integrity.
+* **Verification:** Validated against NIST Known Answer Tests (KAT).
 
-  iii. FPGA/RTL-based hardware security demonstration|
+---
 
-2. Features
+## 📊 Hardware-Software Interface (Register Map)
+The IP core is mapped to the Zynq memory space via AXI4-Lite.
+| Offset | Name | Description |
+| :--- | :--- | :--- |
+| 0x00 | REG_KEY_0 | Key Bytes [127:96]  |
+| 0x04 | REG_KEY_1 | Key Bytes [95:64]   |
+| 0x08 | REG_KEY_2 | Key Bytes [63:32]   |
+| 0x0C | REG_KEY_3 | Key Bytes [31:0]    |
+| 0x10 | REG_MODE  | 0x01:ENC, 0x11:DEC,0x11:BOTH   |
+| 0x14 | REG_TRIG  | Pulse to trigger Key Expansion |
+| 0x18 | REG_STAT  | Bit 1: Key Ready, Bit 0: Busy  |
 
-AES-128 encryption demonstration
+# Block diagram
+<img width="1548" height="413" alt="image" src="https://github.com/user-attachments/assets/01cb0643-0ad0-446a-988b-059022a58a17" />
 
-UART serial communication interface
 
-Hardware-based cryptographic processing
+# Simulation results
+<img width="1527" height="418" alt="image" src="https://github.com/user-attachments/assets/51ccaad2-d513-4e2b-b76b-002f4da2bf3f" />
+<img width="1531" height="445" alt="image" src="https://github.com/user-attachments/assets/95e40fca-dff6-463d-ab2f-d5875cefb53d" />
 
-Synchronous RTL design(fully unrolled and pipelined for high throughput - though bottlenecked by uart )
-
-Suitable for FPGA implementation (effecient usage of fpga resources)
-
-<img width="1480" height="487" alt="image" src="https://github.com/user-attachments/assets/1f60b1a5-00a6-42de-b326-1b3b825ff520" />
