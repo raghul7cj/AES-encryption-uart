@@ -118,3 +118,5 @@ The test suite includes a **multi‑block test** that sends the same 16‑byte b
 
 This guide should help you successfully run the AES‑128 test suite and leverage ILA for in‑depth debugging. For any further issues, consult the Vivado/Vitis documentation or your hardware design files.
 
+## ILA RESULTS
+![WhatsApp Image 2026-02-13 at 4 09 52 PM](https://github.com/user-attachments/assets/ddb81109-e3be-46b0-815e-3f3acb33a3b5)
