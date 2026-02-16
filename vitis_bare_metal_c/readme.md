@@ -56,14 +56,14 @@ To capture waveforms when the 0xFF pattern is sent, follow these steps:
 - Ensure your Vivado project includes an ILA core connected to the AES‑128’s AXI‑Stream interface signals (`s_axis_tdata`, `tvalid`, `tready`, `tlast`, etc.).
 - Set up a suitable trigger condition. Two useful examples:
   - **Trigger on any data:** `s_axis_tdata != 0`
-  - **Trigger on back‑pressure:** `s_axis_tvalid == 1 && s_axis_tready == 0`
+  - **Trigger on back‑pressure:** `s_axis_tvalid == 1 && s_axis_tready == 1`
 
 ### 2. Set a Breakpoint in Vitis
 - In the source code, find the `run_vector()` function that sends the 0xFF pattern. Inside it, locate the call to `wait_for_ila_setup()`.
 - Double‑click the left margin to set a breakpoint on that line.
 
 ### 3. Launch the Debug Session
-- In Vitis, select **Debug As → Launch on Hardware**.
+- In Vitis, select **Run As → Launch on Hardware**.
 - The program will run and halt at the breakpoint **before** the DMA transfer for the 0xFF block begins.
 
 ### 4. Arm the ILA in Vivado
@@ -117,3 +117,4 @@ The test suite includes a **multi‑block test** that sends the same 16‑byte b
 
 
 This guide should help you successfully run the AES‑128 test suite and leverage ILA for in‑depth debugging. For any further issues, consult the Vivado/Vitis documentation or your hardware design files.
+
