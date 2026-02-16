@@ -34,13 +34,9 @@ This guide explains how to set up the **Vitis** software project, program the **
 
 You can program the bitstream either from **Vivado** or directly from **Vitis**.
 
-### Option A: Using Vivado Hardware Manager
-1. Open Vivado.
-2. Open the hardware manager and connect to the Pynq‑Z2 (auto‑detect).
-3. Program the device with the bitstream that includes the ILA core.
-4. Keep Vivado open – you will use it to arm the ILA later.
+ Keep Vivado open – you will use it to arm the ILA later.
 
-### Option B: Using Vitis (if the bitstream is included in the platform)
+### Using Vitis (if the bitstream is included in the platform)
 1. In Vitis, right‑click the application project and select **Launch Hardware**.
 2. The FPGA will be programmed automatically when the application runs (if the platform includes the bitstream). However, for ILA debug, it is often easier to use Vivado.
 
@@ -118,5 +114,6 @@ The test suite includes a **multi‑block test** that sends the same 16‑byte b
 | Tests still fail after bug fix | Re‑verify hardware design (timing, resets). Use ILA to inspect handshake and data paths.   |
 
 ---
+
 
 This guide should help you successfully run the AES‑128 test suite and leverage ILA for in‑depth debugging. For any further issues, consult the Vivado/Vitis documentation or your hardware design files.
